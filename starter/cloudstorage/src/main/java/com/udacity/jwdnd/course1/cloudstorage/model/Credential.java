@@ -26,7 +26,7 @@ public class Credential {
     private String userName;
 
     /**
-     * Key to decrypt the password.
+     * Key to encrypt/decrypt the password.
      */
     private String key;
 
