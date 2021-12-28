@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
@@ -36,9 +37,13 @@ public class HomeController {
     }
 
     @GetMapping()
-    public String view(Note note, Model model) {
+    public String view(Note note, Model model, HttpServletRequest request) {
         User user = getLoggedUser();
         loadViewData(model, user);
+        String errorMsg = request.getParameter("fileErrorMsg");
+        if (errorMsg != null && !errorMsg.isEmpty()) {
+            model.addAttribute("fileErrorMsg", errorMsg);
+        }
         return "home";
     }
 
@@ -74,6 +79,7 @@ public class HomeController {
         model.addAttribute("notes", notes);
         List<File> fileList = fileService.getFilesWithoutContent(user.getId());
         model.addAttribute("fileList", fileList);
+        model.addAttribute("fileErrorMsg", "");
     }
 
     private User getLoggedUser() {
@@ -85,7 +91,7 @@ public class HomeController {
     @PostMapping("/file/insert")
     public String uploadFile(@RequestParam("fileUpload") MultipartFile file, RedirectAttributes attributes) {
         if (file.isEmpty()) {
-            attributes.addFlashAttribute("message", "Please select a file to upload.");
+            attributes.addAttribute("fileErrorMsg", "Please select a file to upload.");
             return "redirect:/home";
         }
 
@@ -105,11 +111,8 @@ public class HomeController {
 
             fileService.insertFile(dbFile);
 
-            // return success response
-            attributes.addFlashAttribute("message", "You successfully uploaded " + fileName + '!');
-
         } catch (IOException e) {
-            attributes.addFlashAttribute("message", "Error on file upload. Details: " + e.getMessage());
+            attributes.addAttribute("fileErrorMsg", "Error on file upload: " + e.getMessage());
             e.printStackTrace();
         }
 
