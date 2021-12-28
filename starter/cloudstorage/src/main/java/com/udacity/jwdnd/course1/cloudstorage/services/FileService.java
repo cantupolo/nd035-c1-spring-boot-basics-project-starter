@@ -28,10 +28,6 @@ public class FileService {
         return fileMapper.getFilesWithoutContent(userId);
     }
 
-    public List<String> getFileNames(Integer userId) {
-        return fileMapper.getFileNames(userId);
-    }
-
     public Integer insertFile(File file) {
         return fileMapper.insert(file);
     }

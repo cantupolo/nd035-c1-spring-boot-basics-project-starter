@@ -1,8 +1,10 @@
 package com.udacity.jwdnd.course1.cloudstorage.controller;
 
+import com.udacity.jwdnd.course1.cloudstorage.model.Credential;
 import com.udacity.jwdnd.course1.cloudstorage.model.File;
 import com.udacity.jwdnd.course1.cloudstorage.model.Note;
 import com.udacity.jwdnd.course1.cloudstorage.model.User;
+import com.udacity.jwdnd.course1.cloudstorage.services.CredentialService;
 import com.udacity.jwdnd.course1.cloudstorage.services.FileService;
 import com.udacity.jwdnd.course1.cloudstorage.services.NoteService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
@@ -26,18 +28,21 @@ public class HomeController {
 
     private NoteService noteService;
 
+    private CredentialService credentialService;
+
     private FileService fileService;
 
     private UserService userService;
 
-    public HomeController(NoteService noteService, UserService userService, FileService fileService) {
-        this.noteService = noteService;
+    public HomeController(UserService userService, NoteService noteService, CredentialService credentialService, FileService fileService) {
         this.userService = userService;
+        this.noteService = noteService;
+        this.credentialService = credentialService;
         this.fileService = fileService;
     }
 
     @GetMapping()
-    public String view(Note note, Model model, HttpServletRequest request) {
+    public String view(Model model, HttpServletRequest request) {
         User user = getLoggedUser();
         loadViewData(model, user);
         String errorMsg = request.getParameter("fileErrorMsg");
@@ -61,7 +66,23 @@ public class HomeController {
         noteService.deleteNote(id);
         User user = getLoggedUser();
         loadViewData(model, user);
-        model.addAttribute("note", new Note());
+        return "home";
+    }
+
+    @PostMapping("/credential/save")
+    public String credentialSave(Credential credential, Model model) {
+        User user = getLoggedUser();
+        credential.setUserId(user.getId());
+        credentialService.saveCredential(credential);
+        loadViewData(model, user);
+        return "home";
+    }
+
+    @GetMapping("/credential/delete/{id}")
+    public String credentialDelete(@PathVariable Integer id, Model model) {
+        credentialService.deleteCredential(id);
+        User user = getLoggedUser();
+        loadViewData(model, user);
         return "home";
     }
 
@@ -70,22 +91,7 @@ public class HomeController {
         fileService.deleteFile(id);
         User user = getLoggedUser();
         loadViewData(model, user);
-        model.addAttribute("note", new Note());
         return "home";
-    }
-
-    private void loadViewData(Model model, User user) {
-        List<Note> notes = noteService.getNotes(user.getId());
-        model.addAttribute("notes", notes);
-        List<File> fileList = fileService.getFilesWithoutContent(user.getId());
-        model.addAttribute("fileList", fileList);
-        model.addAttribute("fileErrorMsg", "");
-    }
-
-    private User getLoggedUser() {
-        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userService.getUser(userName);
-        return user;
     }
 
     @PostMapping("/file/insert")
@@ -138,4 +144,24 @@ public class HomeController {
             outputStream.close();
         }
     }
+
+    private void loadViewData(Model model, User user) {
+        List<Note> notes = noteService.getNotes(user.getId());
+        model.addAttribute("notes", notes);
+        List<File> fileList = fileService.getFilesWithoutContent(user.getId());
+        model.addAttribute("fileList", fileList);
+        List<Credential> credentials = credentialService.getCredentials(user.getId());
+        model.addAttribute("credentials", credentials);
+
+        model.addAttribute("fileErrorMsg", "");
+        model.addAttribute("note", new Note());
+        model.addAttribute("credential", new Credential());
+    }
+
+    private User getLoggedUser() {
+        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.getUser(userName);
+        return user;
+    }
+
 }
