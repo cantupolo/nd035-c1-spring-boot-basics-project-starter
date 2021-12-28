@@ -1,5 +1,7 @@
 package com.udacity.jwdnd.course1.cloudstorage.model;
 
+import java.util.Arrays;
+
 /**
  * File uploaded by a user.
  */
@@ -18,7 +20,7 @@ public class File {
     /**
      * File's name.
      */
-    private String name;
+    private String fileName;
 
     /**
      * File's content type.
@@ -28,12 +30,12 @@ public class File {
     /**
      * File's size.
      */
-    private String size;
+    private String fileSize;
 
     /**
      * File's content.
      */
-    private byte[] blob;
+    private byte[] fileData;
 
     /**
      * @return {@link #id}
@@ -64,17 +66,17 @@ public class File {
     }
 
     /**
-     * @return {@link #name}
+     * @return {@link #fileName}
      */
-    public String getName() {
-        return name;
+    public String getFileName() {
+        return fileName;
     }
 
     /**
-     * @param name {@link #name}
+     * @param fileName {@link #fileName}
      */
-    public void setName(String name) {
-        this.name = name;
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 
     /**
@@ -92,30 +94,30 @@ public class File {
     }
 
     /**
-     * @return {@link #size}
+     * @return {@link #fileSize}
      */
-    public String getSize() {
-        return size;
+    public String getFileSize() {
+        return fileSize;
     }
 
     /**
-     * @param size {@link #size}
+     * @param fileSize {@link #fileSize}
      */
-    public void setSize(String size) {
-        this.size = size;
+    public void setFileSize(String fileSize) {
+        this.fileSize = fileSize;
     }
 
     /**
-     * @return {@link #blob}
+     * @return {@link #fileData}
      */
-    public byte[] getBlob() {
-        return blob;
+    public byte[] getFileData() {
+        return fileData;
     }
 
     /**
-     * @param blob {@link #blob}
+     * @param fileData {@link #fileData}
      */
-    public void setBlob(byte[] blob) {
-        this.blob = blob;
+    public void setFileData(byte[] fileData) {
+        this.fileData = fileData;
     }
 }
