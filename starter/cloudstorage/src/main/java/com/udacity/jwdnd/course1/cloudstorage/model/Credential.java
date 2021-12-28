@@ -36,6 +36,11 @@ public class Credential {
     private String password;
 
     /**
+     * Password.
+     */
+    private String passwordText;
+
+    /**
      * @return {@link #id}
      */
     public Integer getId() {
@@ -117,5 +122,19 @@ public class Credential {
      */
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    /**
+     * @return {@link #passwordText}
+     */
+    public String getPasswordText() {
+        return passwordText;
+    }
+
+    /**
+     * @param passwordText {@link #passwordText}
+     */
+    public void setPasswordText(String passwordText) {
+        this.passwordText = passwordText;
     }
 }

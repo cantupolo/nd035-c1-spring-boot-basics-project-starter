@@ -34,7 +34,8 @@ public class HomeController {
 
     private UserService userService;
 
-    public HomeController(UserService userService, NoteService noteService, CredentialService credentialService, FileService fileService) {
+    public HomeController(UserService userService,
+                          NoteService noteService, CredentialService credentialService, FileService fileService) {
         this.userService = userService;
         this.noteService = noteService;
         this.credentialService = credentialService;

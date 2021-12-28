@@ -11,15 +11,26 @@ public class CredentialService {
 
     private CredentialMapper credentialMapper;
 
-    public CredentialService(CredentialMapper credentialMapper) {
+    private EncryptionService encryptionService;
+
+    public CredentialService(CredentialMapper credentialMapper, EncryptionService encryptionService) {
         this.credentialMapper = credentialMapper;
+        this.encryptionService = encryptionService;
     }
 
     public List<Credential> getCredentials(Integer userId) {
-        return credentialMapper.getCredentials(userId);
+        List<Credential> credentials = credentialMapper.getCredentials(userId);
+        for (Credential credential : credentials) {
+            credential.setPasswordText(encryptionService
+                    .decryptValue(credential.getPassword(), credential.getKey()));
+        }
+        return credentials;
     }
 
     public int saveCredential(Credential credential) {
+        credential.setKey(encryptionService.generateKey());
+        credential.setPassword(encryptionService
+                .encryptValue(credential.getPassword(), credential.getKey()));
         if (credential.getId() != null && credential.getId() > 0) {
             credentialMapper.update(credential);
             return credential.getId();
