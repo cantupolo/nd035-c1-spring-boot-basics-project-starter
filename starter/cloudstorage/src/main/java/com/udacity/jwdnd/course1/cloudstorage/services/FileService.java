@@ -19,6 +19,11 @@ public class FileService {
         return fileMapper.getFile(fileId);
     }
 
+    public boolean isFileAlreadyStored(String fileName) {
+        Integer id = fileMapper.getFileId(fileName);
+        return (id != null && id > 0);
+    }
+
     public List<File> getFilesWithoutContent(Integer userId) {
         return fileMapper.getFilesWithoutContent(userId);
     }

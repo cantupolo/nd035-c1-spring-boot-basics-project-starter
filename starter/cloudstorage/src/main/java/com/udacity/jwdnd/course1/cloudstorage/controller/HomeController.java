@@ -98,6 +98,12 @@ public class HomeController {
         // normalize the file path
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
 
+        // check if the selected file is already stored.
+        if (fileService.isFileAlreadyStored(fileName)) {
+            attributes.addAttribute("fileErrorMsg", "This file is already stored. Please select a different file to upload.");
+            return "redirect:/home";
+        }
+
         // save the file on the database
         try {
             File dbFile = new File();
