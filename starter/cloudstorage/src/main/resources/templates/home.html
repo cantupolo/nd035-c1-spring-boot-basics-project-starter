@@ -63,7 +63,7 @@
                         </div>
                     </div>
                     <div class="tab-pane fade" id="nav-notes" role="tabpanel" aria-labelledby="nav-notes-tab">
-                        <button style="margin: 0.25em;" type="button" class="btn btn-info float-right" onclick="showNoteModal()">
+                        <button id="addNewNote" style="margin: 0.25em;" type="button" class="btn btn-info float-right" onclick="showNoteModal()">
                             + Add a New Note
                         </button>
 
@@ -79,8 +79,8 @@
                                 <tbody>
                                     <tr th:each="noteObj: ${notes}">
                                         <td>
-                                            <button type="button" class="btn btn-success" th:data-parameter1="${noteObj.id}" th:data-parameter2="${noteObj.title}" th:data-parameter3="${noteObj.description}" onclick="showNoteModal(this.getAttribute('data-parameter1'),this.getAttribute('data-parameter2'),this.getAttribute('data-parameter3'))">Edit</button>
-                                            <a class="btn btn-danger" th:href="@{/home/note/delete/{id}(id=${noteObj.id})}">Delete</a>
+                                            <button type="button" th:id="noteEdit + ${noteObj.id}" class="btn btn-success" th:data-parameter1="${noteObj.id}" th:data-parameter2="${noteObj.title}" th:data-parameter3="${noteObj.description}" onclick="showNoteModal(this.getAttribute('data-parameter1'),this.getAttribute('data-parameter2'),this.getAttribute('data-parameter3'))">Edit</button>
+                                            <a class="btn btn-danger" th:id="noteDel + ${noteObj.id}" th:href="@{/home/note/delete/{id}(id=${noteObj.id})}">Delete</a>
                                         </td>
                                         <th scope="row" th:text="${noteObj.title}"/>
                                         <td th:text="${noteObj.description}"></td>
@@ -121,7 +121,7 @@
                         </div>
                     </div>
                     <div class="tab-pane fade" id="nav-credentials" role="tabpanel" aria-labelledby="nav-credentials-tab">
-                        <button style="margin: 0.25em;" type="button" class="btn btn-info float-right" onclick="showCredentialModal()">
+                        <button id="addNewCredential" style="margin: 0.25em;" type="button" class="btn btn-info float-right" onclick="showCredentialModal()">
                             + Add a New Credential
                         </button>
 
@@ -138,12 +138,12 @@
                                 <tbody>
                                 <tr th:each="credentialObj: ${credentials}">
                                     <td>
-                                        <button type="button" class="btn btn-success" th:data-parameter1="${credentialObj.id}" th:data-parameter2="${credentialObj.url}" th:data-parameter3="${credentialObj.userName}" th:data-parameter4="${credentialObj.passwordText}" onclick="showCredentialModal(this.getAttribute('data-parameter1'),this.getAttribute('data-parameter2'),this.getAttribute('data-parameter3'),this.getAttribute('data-parameter4'))">Edit</button>
-                                        <a class="btn btn-danger" th:href="@{/home/credential/delete/{id}(id=${credentialObj.id})}">Delete</a>
+                                        <button type="button" class="btn btn-success" th:id="credEdit + ${credentialObj.id}" th:data-parameter1="${credentialObj.id}" th:data-parameter2="${credentialObj.url}" th:data-parameter3="${credentialObj.userName}" th:data-parameter4="${credentialObj.passwordText}" onclick="showCredentialModal(this.getAttribute('data-parameter1'),this.getAttribute('data-parameter2'),this.getAttribute('data-parameter3'),this.getAttribute('data-parameter4'))">Edit</button>
+                                        <a class="btn btn-danger" th:id="credDel + ${credentialObj.id}" th:href="@{/home/credential/delete/{id}(id=${credentialObj.id})}">Delete</a>
                                     </td>
-                                    <th scope="row" th:text="${credentialObj.url}"/>
-                                    <td th:text="${credentialObj.userName}"></td>
-                                    <td th:text="${credentialObj.password}"></td>
+                                    <th scope="row" th:id="credUrl + ${credentialObj.id}" th:text="${credentialObj.url}"/>
+                                    <td th:id="credUsr + ${credentialObj.id}" th:text="${credentialObj.userName}"></td>
+                                    <td th:id="credPwd + ${credentialObj.id}" th:text="${credentialObj.password}"></td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -177,7 +177,7 @@
                                         </form>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-secondary" id="closeCredential" data-dismiss="modal">Close</button>
                                         <button type="button" class="btn btn-primary" onclick="$('#credentialSubmit').click();">Save changes</button>
                                     </div>
                                 </div>
