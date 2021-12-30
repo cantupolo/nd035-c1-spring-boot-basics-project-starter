@@ -207,7 +207,7 @@
                 $('#credential-id').val(credentialId ? credentialId : '');
                 $('#credential-url').val(url ? url : '');
                 $('#credential-username').val(username ? username : '');
-                $('#credential-password').val(password ? password : '');
+                $('#credential-password').val(password ? atob(password) : '');
                 $('#credentialModal').modal('show');
             }
         </script>

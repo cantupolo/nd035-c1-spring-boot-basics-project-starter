@@ -4,6 +4,8 @@ import com.udacity.jwdnd.course1.cloudstorage.mapper.CredentialMapper;
 import com.udacity.jwdnd.course1.cloudstorage.model.Credential;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.List;
 
 @Service
@@ -21,8 +23,9 @@ public class CredentialService {
     public List<Credential> getCredentials(Integer userId) {
         List<Credential> credentials = credentialMapper.getCredentials(userId);
         for (Credential credential : credentials) {
-            credential.setPasswordText(encryptionService
-                    .decryptValue(credential.getPassword(), credential.getKey()));
+            credential.setPasswordText(Base64.getEncoder().encodeToString(encryptionService
+                    .decryptValue(credential.getPassword(), credential.getKey())
+                    .getBytes(StandardCharsets.UTF_8)));
         }
         return credentials;
     }
