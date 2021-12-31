@@ -49,8 +49,7 @@ public class CredentialTests extends CloudStorageApplicationTests {
                 home.setCredentialUsername(credUsername);
                 home.setCredentialPassword(credPassword);
                 home.clickSaveCredentialButton();
-                home.clickCredentialsTab();
-                Thread.sleep(500);
+                closeResultPage();
                 String editId = driver.findElement(
                         By.xpath("//button[@data-parameter2='" + credUrl + "']")).getAttribute("id");
                 String url = driver.findElement(
@@ -94,9 +93,7 @@ public class CredentialTests extends CloudStorageApplicationTests {
                 home.setCredentialUsername(credUsername);
                 home.setCredentialPassword(credPassword);
                 home.clickSaveCredentialButton();
-
-                home.clickCredentialsTab();
-                Thread.sleep(500);
+                closeResultPage();
 
                 driver.findElement(
                         By.xpath("//button[@data-parameter2='" + credUrl + "']")).click();
@@ -105,8 +102,7 @@ public class CredentialTests extends CloudStorageApplicationTests {
                 assertTrue(credPassword.equals(home.getCredentialPassword()));
 
                 home.clickSaveCredentialButton();
-                home.clickCredentialsTab();
-                Thread.sleep(500);
+                closeResultPage();
 
                 driver.findElement(
                         By.xpath("//button[@data-parameter2='" + credUrl + "']")).click();
@@ -121,8 +117,7 @@ public class CredentialTests extends CloudStorageApplicationTests {
                 home.setCredentialPassword(credPassword);
 
                 home.clickSaveCredentialButton();
-                home.clickCredentialsTab();
-                Thread.sleep(500);
+                closeResultPage();
                 driver.findElement(
                         By.xpath("//button[@data-parameter2='" + credUrl + "']")).click();
 
@@ -131,8 +126,7 @@ public class CredentialTests extends CloudStorageApplicationTests {
                 assertTrue(credPassword.equals(home.getCredentialPassword()));
 
                 home.clickSaveCredentialButton();
-                home.clickCredentialsTab();
-                Thread.sleep(500);
+                closeResultPage();
             }
 
         } catch (InterruptedException e) {
@@ -165,8 +159,7 @@ public class CredentialTests extends CloudStorageApplicationTests {
                 home.setCredentialUsername(credUsername);
                 home.setCredentialPassword(credPassword);
                 home.clickSaveCredentialButton();
-                home.clickCredentialsTab();
-                Thread.sleep(500);
+                closeResultPage();
                 String editId = driver.findElement(
                         By.xpath("//button[@data-parameter2='" + credUrl + "']")).getAttribute("id");
                 String url = driver.findElement(
@@ -189,8 +182,7 @@ public class CredentialTests extends CloudStorageApplicationTests {
                         By.xpath("//button[@data-parameter2='" + credUrl + "']")).getAttribute("id");
                 driver.findElement(
                         By.id(editId.replaceFirst("Edit", "Del"))).click();
-                home.clickCredentialsTab();
-                Thread.sleep(500);
+                closeResultPage();
                 try {
                     driver.findElement(
                             By.xpath("//button[@data-parameter2='" + credUrl + "']"));

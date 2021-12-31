@@ -12,13 +12,13 @@
         <div class="container justify-content-center w-50 p-3" style="margin-top: 5em;">
             <div th:if="${successMsg}" class="alert alert-success fill-parent">
                 <h1 class="display-5" id="success">Success</h1>
-                <span>Your changes were successfully saved. Click <a th:href="@{/home?activeTab={tab}(tab=${activeTab})}">here</a> to continue.</span>
+                <span>Your changes were successfully saved. Click <a id="successLinkToHome" th:href="@{/home?activeTab={tab}(tab=${activeTab})}">here</a> to continue.</span>
             </div>
             <div th:if="${errorMsg}" class="alert alert-danger fill-parent">
                 <h1 class="display-5">Error</h1>
                 <span>Your changes were not saved. </span>
                 <span th:text="${errorMsg}"/><br>
-                <span>Click <a th:href="@{/home?activeTab={tab}(tab=${activeTab})}">here</a> to continue.</span>
+                <span>Click <a id="errorLinkToHome" th:href="@{/home?activeTab={tab}(tab=${activeTab})}">here</a> to continue.</span>
             </div>
         </div>
     </body>

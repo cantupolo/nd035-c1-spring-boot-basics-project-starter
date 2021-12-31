@@ -39,8 +39,7 @@ public class NoteTests extends CloudStorageApplicationTests {
             home.setNoteTitle("Note test create");
             home.setNoteDescription("Note description");
             home.clickSaveNoteButton();
-            home.clickNotesTab();
-            Thread.sleep(500);
+            closeResultPage();
             driver.findElement(By.xpath("//button[@data-parameter2='Note test create']")).click();
             Thread.sleep(500);
             assertTrue(home.getNoteTitle().equals("Note test create"));
@@ -68,17 +67,15 @@ public class NoteTests extends CloudStorageApplicationTests {
             home.setNoteTitle("Note test");
             home.setNoteDescription("Note description");
             home.clickSaveNoteButton();
+            closeResultPage();
 
-            home.clickNotesTab();
-            Thread.sleep(500);
             driver.findElement(By.xpath("//button[@data-parameter2='Note test']")).click();
             Thread.sleep(500);
             home.setNoteTitle("Note test edit");
             home.setNoteDescription("Note description edit");
             home.clickSaveNoteButton();
+            closeResultPage();
 
-            home.clickNotesTab();
-            Thread.sleep(500);
             driver.findElement(By.xpath("//button[@data-parameter2='Note test edit']")).click();
             Thread.sleep(500);
             assertTrue(home.getNoteTitle().equals("Note test edit"));
@@ -106,15 +103,12 @@ public class NoteTests extends CloudStorageApplicationTests {
             home.setNoteTitle("Note test");
             home.setNoteDescription("Note description");
             home.clickSaveNoteButton();
+            closeResultPage();
 
-            home.clickNotesTab();
-            Thread.sleep(500);
             WebElement element = driver.findElement(By.xpath("//button[@data-parameter2='Note test']"));
             String id = element.getAttribute("id");
             id = id.replaceFirst("Edit", "Del");
             driver.findElement(By.id(id)).click();
-            home.clickNotesTab();
-            Thread.sleep(500);
             try {
                 driver.findElement(By.id(id));
             } catch (NoSuchElementException e) {
