@@ -17,7 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
@@ -43,13 +42,11 @@ public class HomeController {
     }
 
     @GetMapping()
-    public String view(Model model, HttpServletRequest request) {
+    public String view(Model model,
+                       @RequestParam(name = "activeTab", required = false, defaultValue = "files")
+                                   String activeTab) {
         User user = getLoggedUser();
-        loadViewData(model, user);
-        String errorMsg = request.getParameter("fileErrorMsg");
-        if (errorMsg != null && !errorMsg.isEmpty()) {
-            model.addAttribute("fileErrorMsg", errorMsg);
-        }
+        loadViewData(model, user, activeTab);
         return "home";
     }
 
@@ -58,16 +55,20 @@ public class HomeController {
         User user = getLoggedUser();
         note.setUserId(user.getId());
         noteService.saveNote(note);
-        loadViewData(model, user);
-        return "home";
+        loadViewData(model, user, "notes");
+        model.addAttribute("successMsg", "true");
+        model.addAttribute("activeTab", "notes");
+        return "result";
     }
 
     @GetMapping("/note/delete/{id}")
     public String noteDelete(@PathVariable Integer id, Model model) {
         noteService.deleteNote(id);
         User user = getLoggedUser();
-        loadViewData(model, user);
-        return "home";
+        loadViewData(model, user, "notes");
+        model.addAttribute("successMsg", "true");
+        model.addAttribute("activeTab", "notes");
+        return "result";
     }
 
     @PostMapping("/credential/save")
@@ -75,31 +76,38 @@ public class HomeController {
         User user = getLoggedUser();
         credential.setUserId(user.getId());
         credentialService.saveCredential(credential);
-        loadViewData(model, user);
-        return "home";
+        loadViewData(model, user, "credentials");
+        model.addAttribute("successMsg", "true");
+        model.addAttribute("activeTab", "credentials");
+        return "result";
     }
 
     @GetMapping("/credential/delete/{id}")
     public String credentialDelete(@PathVariable Integer id, Model model) {
         credentialService.deleteCredential(id);
         User user = getLoggedUser();
-        loadViewData(model, user);
-        return "home";
+        loadViewData(model, user, "credentials");
+        model.addAttribute("successMsg", "true");
+        model.addAttribute("activeTab", "credentials");
+        return "result";
     }
 
     @GetMapping("/file/delete/{id}")
     public String fileDelete(@PathVariable Integer id, Model model) {
         fileService.deleteFile(id);
         User user = getLoggedUser();
-        loadViewData(model, user);
-        return "home";
+        loadViewData(model, user, "files");
+        model.addAttribute("successMsg", "true");
+        model.addAttribute("activeTab", "files");
+        return "result";
     }
 
     @PostMapping("/file/insert")
     public String uploadFile(@RequestParam("fileUpload") MultipartFile file, RedirectAttributes attributes) {
         if (file.isEmpty()) {
-            attributes.addAttribute("fileErrorMsg", "Please select a file to upload.");
-            return "redirect:/home";
+            attributes.addAttribute("errorMsg", "Please select a file to upload.");
+            attributes.addAttribute("activeTab", "files");
+            return "redirect:/result";
         }
 
         // normalize the file path
@@ -107,8 +115,9 @@ public class HomeController {
 
         // check if the selected file is already stored.
         if (fileService.isFileAlreadyStored(fileName)) {
-            attributes.addAttribute("fileErrorMsg", "This file is already stored. Please select a different file to upload.");
-            return "redirect:/home";
+            attributes.addAttribute("errorMsg", "This file is already stored. Please select a different file to upload.");
+            attributes.addAttribute("activeTab", "files");
+            return "redirect:/result";
         }
 
         // save the file on the database
@@ -124,12 +133,15 @@ public class HomeController {
 
             fileService.insertFile(dbFile);
 
-        } catch (IOException e) {
-            attributes.addAttribute("fileErrorMsg", "Error on file upload: " + e.getMessage());
-            e.printStackTrace();
-        }
+            attributes.addAttribute("successMsg", "true");
+            attributes.addAttribute("activeTab", "files");
+            return "redirect:/result";
 
-        return "redirect:/home";
+        } catch (IOException e) {
+            attributes.addAttribute("errorMsg", "Error on file upload: " + e.getMessage());
+            attributes.addAttribute("activeTab", "files");
+            return "redirect:/result";
+        }
     }
 
     @GetMapping("/file/download/{id}")
@@ -146,7 +158,7 @@ public class HomeController {
         }
     }
 
-    private void loadViewData(Model model, User user) {
+    private void loadViewData(Model model, User user, String activeTab) {
         List<Note> notes = noteService.getNotes(user.getId());
         model.addAttribute("notes", notes);
         List<File> fileList = fileService.getFilesWithoutContent(user.getId());
@@ -154,9 +166,10 @@ public class HomeController {
         List<Credential> credentials = credentialService.getCredentials(user.getId());
         model.addAttribute("credentials", credentials);
 
-        model.addAttribute("fileErrorMsg", "");
         model.addAttribute("note", new Note());
         model.addAttribute("credential", new Credential());
+
+        model.addAttribute(activeTab + "TabActive", true);
     }
 
     private User getLoggedUser() {
